@@ -27,10 +27,39 @@
  */
 
 import './index.css';
+import {
+    ApiClient
+} from '@twurple/api';
+import {
+    ClientCredentialsAuthProvider
+} from '@twurple/auth';
+
+const clientId = "clientid"
+const clientSecret = "secretid"
+const authProvider = new ClientCredentialsAuthProvider(clientId, clientSecret);
+const apiClient = new ApiClient({
+    authProvider,
+    preAuth: true,
+    logger: {
+        minLevel: 'DEBUG'
+    }
+});
+
+const getChannel = async (userId) => {
+    const user = await apiClient.users.getUserByName(userId);
+    const {
+        displayName,
+        name
+    } = user
+    return {
+        displayName,
+        name
+    }
+}
 
 console.log('👋 This message is being logged by "renderer.js", included via webpack');
 
 (async () => {
-    const channels = await window.twitch.getChannel('peteur_pan')
+    const channels = await getChannel('peteur_pan')
     console.log(channels)
 })()
